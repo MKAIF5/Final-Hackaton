@@ -1,58 +1,37 @@
-import express from 'express'
-import { products } from './productData.mjs'
-import cors from 'cors'
+import express from 'express';
+import cors from 'cors';
 
+const app = express();
 
-const app = express()
-const port = process.env.PORT || 3000
-const products = []
+// Vercel automatically sets the port for serverless functions
+const port = process.env.PORT || 3000;
 
-app.use(cors({ origin: ["http://localhost:5173"] }))
-app.use(express.json())
+app.use(cors({ origin: ["http://localhost:5173"] }));
+app.use(express.json());
+
+const products = [
+  { id: 1, name: "Product 1", price: 100 },
+  { id: 2, name: "Product 2", price: 200 },
+];
 
 app.get('/', (request, response) => {
-    console.log("ye hy request: ", request.ip);
-
-    response.send(`Hello World 2`)
-})
+  response.send("Hello World");
+});
 
 app.get('/products', (request, response) => {
+  response.json(products);
+});
 
-    response.send({ message: "All products fetched successfully", status: 200, data: products, })
-})
-
-app.get('/product/:id', (request, response) => {
-    const index = Number(request.params.id) - 1
-
-    const product = products[index]
-
-    if (!product) {
-        response.status(404).send({ data: null, message: 'product not found' })
-        return;
-    }
-
-    response.status(200).json({ data: product, message: "Product found successfully" })
-})
-
-app.post('/product', (request, response) => {
-    console.log("request ki body: ", request.body);
-
-    const product = request.body
-
-    if (!request.body.productName) {
-        response.status(400).send('name bhi tw batao product ka')
-        return;
-    }
-
-    products.push(product)
-
-    response.status(201).send("product added successfully!")
-})
+app.post('/products', (request, response) => {
+  const newProduct = request.body;
+  products.push(newProduct);
+  response.status(201).json(newProduct);
+});
 
 app.use((request, response) => {
-    response.status(404).send("no route found!")
-})
+  response.status(404).send("No Route Found");
+});
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+// For Vercel serverless, we don't need app.listen().
+// Export the Express app instead.
+export default app;
