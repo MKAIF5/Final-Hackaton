@@ -5,7 +5,7 @@ function App() {
   return (
     <>
       <div>
-        deploy on surge
+        deploy on surge is kaif
       </div>
     </>
   )

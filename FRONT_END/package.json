@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && cd dist && copy index.html 200.html",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "surge ./dist --domain kaif-final-hackaton.surge.sh",
+    "both": "npm run build && npm run deploy"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.0",
